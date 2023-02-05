@@ -20,7 +20,10 @@ export const KweekUtils = () => {
       <button className="hidden rounded-full p-2 transition hover:bg-blue-light/10 active:bg-blue-light/20 sm:flex">
         <AiOutlineCalendar size={"1.25em"} />
       </button>
-      <button className="rounded-full p-1 opacity-50 transition" disabled>
+      <button
+        className="hidden rounded-full p-1 transition disabled:text-blue-light/50 sm:flex"
+        disabled
+      >
         <TiLocationOutline size={"1.25em"} />
       </button>
     </div>
