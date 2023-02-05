@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 
 export const Footer = () => {
   const { data: session } = useSession();
-  if (session) {
+  if (!session) {
     return (
       <footer className="fixed bottom-0 flex h-[72px] w-full items-center bg-blue-light ">
         <div className="m-auto flex items-center justify-between gap-4 sm:gap-8 md:gap-32 lg:gap-64">
