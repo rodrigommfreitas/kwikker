@@ -6,10 +6,6 @@ import { CreateKweek } from "../components/shared/CreateKweek/CreateKweek";
 const Home: NextPage = () => {
   const [activeTab, setActiveTab] = useState<"forYou" | "following">("forYou");
 
-  const handleClick = (tab: string) => {
-    tab === "following" ? setActiveTab("following") : setActiveTab("forYou");
-  };
-
   return (
     <>
       <header className="sticky top-0 h-28 border-b border-gray-medium backdrop-blur-md">
@@ -18,7 +14,7 @@ const Home: NextPage = () => {
         </button>
         <div className="flex h-1/2 text-gray-light">
           <button
-            onClick={() => handleClick("forYou")}
+            onClick={() => setActiveTab("forYou")}
             className="flex w-full justify-center transition hover:bg-gray-medium/50"
           >
             <div
@@ -32,7 +28,7 @@ const Home: NextPage = () => {
             </div>
           </button>
           <button
-            onClick={() => handleClick("following")}
+            onClick={() => setActiveTab("following")}
             className="flex w-full justify-center transition hover:bg-gray-medium/50 "
           >
             <div
