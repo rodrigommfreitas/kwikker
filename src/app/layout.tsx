@@ -3,6 +3,7 @@ import { Sidebar } from "../components/Sidebar/Sidebar";
 import { Providers } from "./providers";
 import { Footer } from "../components/Footer";
 import { SecondarySidebar } from "../components/SecondarySidebar/SecondarySidebar";
+import { ClientProvider } from "../client/trpcClient";
 
 export default function RootLayout({
   children,
@@ -10,18 +11,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
-      <head />
-      <body className="m-auto flex justify-center">
-        <Providers>
-          <Sidebar />
-          <main className="w-full max-w-[600px] border-l border-gray-medium sm:border-r">
-            {children}
-          </main>
-          <SecondarySidebar />
-          <Footer />
-        </Providers>
-      </body>
-    </html>
+    <ClientProvider>
+      <html>
+        <head />
+        <body className="m-auto flex justify-center">
+          <Providers>
+            <Sidebar />
+            <main className="w-full max-w-[600px] border-l border-gray-medium sm:border-r">
+              {children}
+            </main>
+            <SecondarySidebar />
+            <Footer />
+          </Providers>
+        </body>
+      </html>
+    </ClientProvider>
   );
 }
