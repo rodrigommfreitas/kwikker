@@ -67,7 +67,7 @@ const Profile: NextPage = () => {
           <div className="mx-4">
             <div className="relative -top-16 flex max-h-32 justify-between">
               <Image
-                src={user?.image as string}
+                src={user.image as string}
                 alt="user image"
                 width={128}
                 height={128}
@@ -98,11 +98,15 @@ const Profile: NextPage = () => {
                 <div className="text-sm text-gray-light">@{user?.id}</div>
               </div>
 
-              <div>Lorem ipsum dolor sit amet.</div>
+              {user.description && <div>{user.description}</div>}
 
               <div className="flex items-center gap-1 text-sm text-gray-light">
                 <BiCalendar size={"1.25em"} />
-                <div>Joined in July 2022</div>
+                <div>
+                  Joined in{" "}
+                  {user.createdAt.toLocaleString("default", { month: "long" })}{" "}
+                  {user.createdAt.getFullYear()}
+                </div>
               </div>
 
               <div className="flex gap-4 text-sm">
