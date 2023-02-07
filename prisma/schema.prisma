@@ -52,14 +52,17 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-
+    description   String?
+    location      String?
     following     Follows[] @relation(name: "follower")
     followers     Follows[] @relation(name: "following")
 
-    kweeks        Kweek[]
+    kweeks        Kweek[] 
     likes         Like[]
     retweets      Retweet[]
     replies       Reply[]
+
+    createdAt     DateTime  @default(now())
 }
 
 model VerificationToken {
@@ -71,8 +74,8 @@ model VerificationToken {
 }
 model Follows {
     followerId String
-    followingId String
-    follower User  @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+    followingId String 
+    follower User  @relation("follower", fields: [followerId], references: [id], onDelete: Cascade) 
     following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
 
     @@id([followerId, followingId])
