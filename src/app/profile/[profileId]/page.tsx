@@ -14,6 +14,7 @@ import {
   BiDotsHorizontalRounded,
   BiLeftArrowAlt,
 } from "react-icons/bi";
+import { TiLocationOutline } from "react-icons/ti";
 
 // May need to review image and banner z index
 // Make image and banner responsive
@@ -99,6 +100,13 @@ const Profile: NextPage = () => {
               </div>
 
               {user.description && <div>{user.description}</div>}
+
+              {user.location && (
+                <div className="flex items-center gap-1 text-sm text-gray-light">
+                  <TiLocationOutline size={"1.25em"} />
+                  <div>{user.location}</div>
+                </div>
+              )}
 
               <div className="flex items-center gap-1 text-sm text-gray-light">
                 <BiCalendar size={"1.25em"} />
