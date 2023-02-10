@@ -59,7 +59,7 @@ model User {
 
     kweeks        Kweek[] 
     likes         Like[]
-    retweets      Retweet[]
+    rekweeks      Rekweek[]
     replies       Reply[]
 
     createdAt     DateTime  @default(now())
@@ -72,6 +72,7 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
 model Follows {
     followerId String
     followingId String 
@@ -91,7 +92,8 @@ model Kweek {
     author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
     replies   Reply[]
     likes    Like[]
-    retweets Retweet[]
+    rekweeks Rekweek[]
+    
     @@index([authorId])
 }
 
@@ -108,17 +110,17 @@ model Like {
     @@index([likerId])
 }
 
-model Retweet {
+model Rekweek {
     id        String     @id @default(cuid())
     createdAt DateTime   @default(now())
     updatedAt DateTime   @updatedAt
     kweekId    String
     kweek      Kweek     @relation(fields: [kweekId], references: [id], onDelete: Cascade)
-    retweeterId  String
-    retweeter    User    @relation(fields: [retweeterId], references: [id], onDelete: Cascade)
+    rekweekerId  String
+    rekweeker    User    @relation(fields: [rekweekerId], references: [id], onDelete: Cascade)
 
     @@index([kweekId])
-    @@index([retweeterId])
+    @@index([rekweekerId])
 }
 
 model Reply {
