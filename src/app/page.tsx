@@ -1,14 +1,27 @@
 "use client";
+import { Kweek } from "@prisma/client";
 import { type NextPage } from "next";
 import { useState } from "react";
 import { CreateKweek } from "../components/shared/CreateKweek/CreateKweek";
+import { KweekPost } from "../components/shared/KweekPost";
+import { api } from "../utils/api";
 
 const Home: NextPage = () => {
   const [activeTab, setActiveTab] = useState<"forYou" | "following">("forYou");
+  const [kweeks, setKweeks] = useState<Kweek[]>([]);
+
+  const { data: kweeksData, isLoading } = api.kweek.getAllKweeks.useQuery(
+    {},
+    {
+      onSuccess(kweeksData: Kweek[]) {
+        setKweeks(kweeksData);
+      },
+    }
+  );
 
   return (
     <>
-      <header className="sticky top-0 h-28 border-b border-gray-medium backdrop-blur-md">
+      <header className="sticky top-0 h-28 border-b border-gray-medium bg-black/50 backdrop-blur-md">
         <button className="flex h-1/2 w-full items-center pl-4 text-xl font-bold">
           Home
         </button>
@@ -43,15 +56,12 @@ const Home: NextPage = () => {
           </button>
         </div>
       </header>
-      <CreateKweek />
-      <CreateKweek />
-      <CreateKweek />
-      <CreateKweek />
-      <CreateKweek />
-      <CreateKweek />
-      <CreateKweek />
-      <CreateKweek />
-      <CreateKweek />
+
+      <CreateKweek setKweeks={setKweeks} />
+
+      {kweeks.map((kweek) => (
+        <KweekPost key={kweek.id} kweek={kweek} type={"feed"} />
+      ))}
     </>
   );
 };
