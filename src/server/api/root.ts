@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "./trpc";
 import { userRouter } from "./routers/userRouter";
+import { kweekRouter } from "./routers/kweekRouter";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { userRouter } from "./routers/userRouter";
  */
 export const appRouter = createTRPCRouter({
   user: userRouter,
+  kweek: kweekRouter,
 });
 
 // export type definition of API
