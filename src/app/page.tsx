@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { Kweek } from "@prisma/client";
+import type { Kweek } from "@prisma/client";
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { CreateKweek } from "../components/shared/CreateKweek/CreateKweek";
 import { KweekPost } from "../components/shared/KweekPost";
@@ -8,13 +10,24 @@ import { api } from "../utils/api";
 
 const Home: NextPage = () => {
   const [activeTab, setActiveTab] = useState<"forYou" | "following">("forYou");
-  const [kweeks, setKweeks] = useState<Kweek[]>([]);
+  const [forYouKweeks, setForYouKweeks] = useState<Kweek[]>([]);
+  const [followingKweeks, setFollowingKweeks] = useState<Kweek[]>([]);
+  const { data: session } = useSession();
 
-  const { data: kweeksData, isLoading } = api.kweek.getAllKweeks.useQuery(
+  const { data: forYouKweeksData, isLoading } = api.kweek.getAllKweeks.useQuery(
     {},
     {
-      onSuccess(kweeksData: Kweek[]) {
-        setKweeks(kweeksData);
+      onSuccess(forYouKweeksData: Kweek[]) {
+        setForYouKweeks(forYouKweeksData);
+      },
+    }
+  );
+
+  const { data: followingKweeksData } = api.kweek.getFollowingKweeks.useQuery(
+    { userId: session?.user?.id as string },
+    {
+      onSuccess(followingKweeksData: Kweek[]) {
+        setFollowingKweeks(followingKweeksData);
       },
     }
   );
@@ -57,11 +70,27 @@ const Home: NextPage = () => {
         </div>
       </header>
 
-      <CreateKweek setKweeks={setKweeks} />
+      {session && (
+        <CreateKweek
+          setForYouKweeks={setForYouKweeks}
+          setFollowingKweeks={setFollowingKweeks}
+        />
+      )}
 
-      {kweeks.map((kweek) => (
-        <KweekPost key={kweek.id} kweek={kweek} type={"feed"} />
-      ))}
+      {activeTab === "forYou" ? (
+        forYouKweeks.map((kweek) => (
+          <KweekPost key={kweek.id} kweek={kweek} type={"feed"} />
+        ))
+      ) : session ? (
+        followingKweeks.map((kweek) => (
+          // TODO: Show rekweeked or liked by user
+          <KweekPost key={kweek.id} kweek={kweek} type={"feed"} />
+        ))
+      ) : (
+        <div className="text-center text-2xl font-bold">
+          Follow some users to see their kweeks
+        </div>
+      )}
     </>
   );
 };
