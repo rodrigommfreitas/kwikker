@@ -121,7 +121,7 @@ export const KweekPost = ({ kweek, rekweekerId, rekweekerUsername }: Props) => {
           <div className="flex w-12 items-center justify-end">
             <AiOutlineRetweet size={"1.125em"} />
           </div>
-          {session?.user.name == rekweekerUsername ? "You" : rekweekerUsername}{" "}
+          {session?.user.id === rekweekerId ? "You" : rekweekerUsername}{" "}
           rekweeked
         </div>
       )}
