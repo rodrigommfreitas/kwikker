@@ -10,10 +10,11 @@ import { api } from "../../../utils/api";
 import type { Kweek } from "@prisma/client";
 
 type Props = {
-  setKweeks: React.Dispatch<React.SetStateAction<Kweek[]>>;
+  setForYouKweeks: React.Dispatch<React.SetStateAction<Kweek[]>>;
+  setFollowingKweeks: React.Dispatch<React.SetStateAction<Kweek[]>>;
 };
 
-export const CreateKweek = ({ setKweeks }: Props) => {
+export const CreateKweek = ({ setForYouKweeks, setFollowingKweeks }: Props) => {
   const [hasFocused, setHasFocused] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
   const { data: session } = useSession();
@@ -22,7 +23,8 @@ export const CreateKweek = ({ setKweeks }: Props) => {
 
   const { mutate: addKweek } = api.kweek.addKweek.useMutation({
     onSuccess(kweek) {
-      setKweeks((prev) => [...prev, kweek as Kweek]);
+      setForYouKweeks((prev) => [...prev, kweek as Kweek]);
+      setFollowingKweeks((prev) => [...prev, kweek as Kweek]);
     },
   });
 
@@ -55,7 +57,7 @@ export const CreateKweek = ({ setKweeks }: Props) => {
     <div className="flex gap-4 border-b border-gray-medium px-4 pb-1 pt-2">
       <Image
         src={session?.user.image as string}
-        alt="user image"
+        alt=""
         width={48}
         height={48}
         className="h-max-12 w-max-12 h-12 w-12 cursor-pointer rounded-full"
