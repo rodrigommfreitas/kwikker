@@ -16,11 +16,78 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
-  }),
+  getStats: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const followingCount = await ctx.prisma.follows.count({
+          where: { followerId: input.id },
+        });
+        const followersCount = await ctx.prisma.follows.count({
+          where: { followingId: input.id },
+        });
+        return {
+          followingCount: followingCount,
+          followersCount: followersCount,
+        };
+      } catch (err) {
+        console.log(`It wasn't possible to get stats...\n ${err as string}`);
+      }
+    }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+  getIsFollowedByUser: protectedProcedure
+    .input(z.object({ followerId: z.string(), followingId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const isFollowed = await ctx.prisma.follows.findFirst({
+          where: {
+            followerId: input.followerId,
+            followingId: input.followingId,
+          },
+        });
+        return isFollowed ? true : false;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to verify if user is followed...\n ${
+            err as string
+          }`
+        );
+      }
+    }),
+
+  follow: protectedProcedure
+    .input(z.object({ followerId: z.string(), followingId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const follow = await ctx.prisma.follows.create({
+          data: {
+            followerId: input.followerId,
+            followingId: input.followingId,
+          },
+        });
+        return follow;
+      } catch (err) {
+        console.log(`It wasn't possible to follow user...\n ${err as string}`);
+      }
+    }),
+
+  unfollow: protectedProcedure
+    .input(z.object({ followerId: z.string(), followingId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const follow = await ctx.prisma.follows.delete({
+          where: {
+            followerId_followingId: {
+              followerId: input.followerId,
+              followingId: input.followingId,
+            },
+          },
+        });
+        return follow;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to unfollow user...\n ${err as string}`
+        );
+      }
+    }),
 });
