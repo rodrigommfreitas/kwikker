@@ -8,7 +8,9 @@ export const SecondarySidebar = () => {
 
   return (
     <div className="ml-4 hidden w-[300px] lg:flex lg:flex-col xl:ml-8 xl:w-[350px]">
-      <SearchBar />
+      <div className="sticky top-0 bg-black py-1">
+        <SearchBar />
+      </div>
       {!session && <Signup />}
     </div>
   );

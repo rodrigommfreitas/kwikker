@@ -27,7 +27,7 @@ export const SearchBar = () => {
 
   return (
     <div
-      className={`sticky top-1 my-1 flex w-full gap-4 rounded-full bg-gray-medium px-4 py-3 outline-none outline-offset-0 ${
+      className={`flex w-full gap-4 rounded-full bg-gray-medium px-4 py-3 outline-none outline-offset-0 ${
         isFocus ? "outline-1 outline-blue-500" : ""
       }`}
     >
