@@ -35,6 +35,56 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
+  getFollowers: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        skip: z.number(),
+        take: z.number(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const followers = await ctx.prisma.follows.findMany({
+          skip: input.skip,
+          take: input.take,
+          where: {
+            followingId: input.id,
+          },
+        });
+        return followers;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to get followers...\n ${err as string}`
+        );
+      }
+    }),
+
+  getFollowing: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        skip: z.number(),
+        take: z.number(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const following = await ctx.prisma.follows.findMany({
+          skip: input.skip,
+          take: input.take,
+          where: {
+            followerId: input.id,
+          },
+        });
+        return following;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to get following...\n ${err as string}`
+        );
+      }
+    }),
+
   getIsFollowedByUser: protectedProcedure
     .input(z.object({ followerId: z.string(), followingId: z.string() }))
     .query(async ({ ctx, input }) => {
