@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { User, Kweek } from "@prisma/client";
 import Image from "next/image";
 import { useState } from "react";
