@@ -1,4 +1,3 @@
-import { prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -70,6 +69,50 @@ export const kweekRouter = createTRPCRouter({
         console.log(
           `It wasn't possible to unrekweek kweek...\n ${err as string}`
         );
+      }
+    }),
+
+  likeKweek: protectedProcedure
+    .input(
+      z.object({
+        kweekId: z.string(),
+        likerId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const like = await ctx.prisma.like.create({
+          data: input,
+        });
+        return like;
+      } catch (err) {
+        console.log(`It wasn't possible to like kweek...\n ${err as string}`);
+      }
+    }),
+
+  unLikeKweek: protectedProcedure
+    .input(
+      z.object({
+        kweekId: z.string(),
+        likerId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const like = await ctx.prisma.like.findFirst({
+          where: {
+            kweekId: input.kweekId,
+            likerId: input.likerId,
+          },
+        });
+        const unlike = await ctx.prisma.like.delete({
+          where: {
+            id: like?.id,
+          },
+        });
+        return unlike;
+      } catch (err) {
+        console.log(`It wasn't possible to unlike kweek...\n ${err as string}`);
       }
     }),
 
