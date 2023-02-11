@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import {
@@ -88,9 +88,6 @@ export const Nav = () => {
           <button className={btnStyle}>
             <BiDotsHorizontalRounded size={"1.5em"} />
             <span className={txtStyle}>More</span>
-          </button>
-          <button onClick={() => signOut()} className={btnStyle}>
-            sign out
           </button>
         </>
       ) : (
