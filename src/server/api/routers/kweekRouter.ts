@@ -1,3 +1,4 @@
+import type { Kweek, User } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -21,6 +22,29 @@ export const kweekRouter = createTRPCRouter({
         return kweek;
       } catch (err) {
         console.log(`It wasn't possible to add kweek...\n ${err as string}`);
+      }
+    }),
+
+  deleteKweek: protectedProcedure
+    .input(
+      z.object({
+        kweekId: z.string(),
+        authorId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        if (input.authorId !== ctx.session.user.id)
+          throw new Error("Unauthorized");
+
+        const kweek = await ctx.prisma.kweek.delete({
+          where: {
+            id: input.kweekId,
+          },
+        });
+        return kweek;
+      } catch (err) {
+        console.log(`It wasn't possible to delete kweek...\n ${err as string}`);
       }
     }),
 
@@ -140,6 +164,109 @@ export const kweekRouter = createTRPCRouter({
       }
     }),
 
+  getFollowingKweeks: publicProcedure
+    .input(
+      z.object({
+        skip: z.number().optional(),
+        take: z.number().optional(),
+        userId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        // User kweeks
+        const kweeks = await ctx.prisma.kweek.findMany({
+          skip: input.skip,
+          take: input.take,
+          where: {
+            authorId: input.userId,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+
+        // User followers
+        const following = await ctx.prisma.follows.findMany({
+          skip: input.skip,
+          take: input.take,
+          where: {
+            followerId: input.userId,
+          },
+        });
+        const followingIds = following.map((follow) => follow.followingId);
+
+        // Followers kweeks
+        const followersKweeks = await ctx.prisma.kweek.findMany({
+          skip: input.skip,
+          take: input.take,
+          where: {
+            authorId: {
+              in: followingIds,
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+        kweeks.push(...followersKweeks);
+
+        const followingRekweeks = await ctx.prisma.rekweek.findMany({
+          skip: input.skip,
+          take: input.take,
+          where: {
+            rekweekerId: {
+              in: followingIds,
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+        for (const rekweek of followingRekweeks) {
+          const rekweekedKweek = await ctx.prisma.kweek.findUnique({
+            where: {
+              id: rekweek.kweekId,
+            },
+          });
+          rekweekedKweek && kweeks.push(rekweekedKweek);
+        }
+
+        // Followers likes
+        const followingLikes = await ctx.prisma.like.findMany({
+          skip: input.skip,
+          take: input.take,
+          where: {
+            likerId: {
+              in: followingIds,
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+        for (const like of followingLikes) {
+          const likedKweek = await ctx.prisma.kweek.findUnique({
+            where: {
+              id: like.kweekId,
+            },
+          });
+          likedKweek && kweeks.push(likedKweek);
+        }
+
+        // Sort kweeks by time
+        kweeks.sort((a: Kweek, b: Kweek) => {
+          return b.createdAt.getTime() - a.createdAt.getTime();
+        });
+
+        return kweeks;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to get following kweeks...\n ${err as string}`
+        );
+      }
+    }),
+
   getUserKweeksAndRekweeks: publicProcedure
     .input(
       z.object({
@@ -160,6 +287,7 @@ export const kweekRouter = createTRPCRouter({
             createdAt: "desc",
           },
         });
+
         const rekweeks = await ctx.prisma.rekweek.findMany({
           skip: input.skip,
           take: input.take,
@@ -180,13 +308,50 @@ export const kweekRouter = createTRPCRouter({
           rekweekedKweek && kweeks.push(rekweekedKweek);
         }
 
-        kweeks.sort((a, b) => {
+        kweeks.sort((a: Kweek, b: Kweek) => {
           return b.createdAt.getTime() - a.createdAt.getTime();
         });
         return kweeks;
       } catch (err) {
         console.log(
           `It wasn't possible to get user kweeks...\n ${err as string}`
+        );
+      }
+    }),
+
+  getUserLikedKweeks: publicProcedure
+    .input(
+      z.object({
+        skip: z.number().optional(),
+        take: z.number().optional(),
+        userId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const likes = await ctx.prisma.like.findMany({
+          skip: input.skip,
+          take: input.take,
+          where: {
+            likerId: input.userId,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+        const kweeks = [];
+        for (const like of likes) {
+          const likedKweek = await ctx.prisma.kweek.findUnique({
+            where: {
+              id: like.kweekId,
+            },
+          });
+          likedKweek && kweeks.push(likedKweek);
+        }
+        return kweeks;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to get liked kweeks...\n ${err as string}`
         );
       }
     }),
