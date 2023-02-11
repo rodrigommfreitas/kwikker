@@ -25,6 +25,54 @@ export const kweekRouter = createTRPCRouter({
       }
     }),
 
+  rekweekKweek: protectedProcedure
+    .input(
+      z.object({
+        kweekId: z.string(),
+        rekweekerId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const rekweek = await ctx.prisma.rekweek.create({
+          data: input,
+        });
+        return rekweek;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to rekweek kweek...\n ${err as string}`
+        );
+      }
+    }),
+
+  unRekweekKweek: protectedProcedure
+    .input(
+      z.object({
+        kweekId: z.string(),
+        rekweekerId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const rekweek = await ctx.prisma.rekweek.findFirst({
+          where: {
+            kweekId: input.kweekId,
+            rekweekerId: input.rekweekerId,
+          },
+        });
+        const unrekweek = await ctx.prisma.rekweek.delete({
+          where: {
+            id: rekweek?.id,
+          },
+        });
+        return unrekweek;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to unrekweek kweek...\n ${err as string}`
+        );
+      }
+    }),
+
   getAllKweeks: publicProcedure
     .input(
       z.object({
@@ -163,12 +211,4 @@ export const kweekRouter = createTRPCRouter({
         );
       }
     }),
-
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
-  }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
 });
