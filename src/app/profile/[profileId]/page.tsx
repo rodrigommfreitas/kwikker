@@ -30,6 +30,7 @@ const Profile: NextPage = () => {
     "kweeks"
   );
   const [kweeksAndRekweeks, setKweeksAndRekweeks] = useState<Kweek[]>([]);
+  const [likes, setLikes] = useState<Kweek[]>([]);
   const [userNotFound, setUserNotFound] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [isUnfollowModalOpen, setIsUnfollowModalOpen] =
@@ -89,6 +90,15 @@ const Profile: NextPage = () => {
     {
       onSuccess(kweeksData: Kweek[]) {
         setKweeksAndRekweeks(kweeksData);
+      },
+    }
+  );
+
+  const { data: likesData } = api.kweek.getUserLikedKweeks.useQuery(
+    { userId: userId as string },
+    {
+      onSuccess(likesData: Kweek[]) {
+        setLikes(likesData);
       },
     }
   );
@@ -255,10 +265,27 @@ const Profile: NextPage = () => {
             </button>
           </div>
           <div className="relative -top-12 sm:-top-16">
-            {activeTab === "kweeks" &&
-              kweeksAndRekweeks.map((kweek) => (
-                <KweekPost key={kweek.id} kweek={kweek} type="feed" />
-              ))}
+            {activeTab === "kweeks"
+              ? kweeksAndRekweeks.map((kweek) =>
+                  kweek.authorId !== userId ? (
+                    <KweekPost
+                      key={kweek.id}
+                      kweek={kweek}
+                      type="feed"
+                      rekweekerId={userId}
+                      rekweekerUsername={user.name as string}
+                    />
+                  ) : (
+                    <KweekPost key={kweek.id} kweek={kweek} type="feed" />
+                  )
+                )
+              : activeTab === "replies"
+              ? null
+              : activeTab === "likes"
+              ? likes.map((kweek) => (
+                  <KweekPost key={kweek.id} kweek={kweek} type="feed" />
+                ))
+              : null}
           </div>
         </>
       )}
