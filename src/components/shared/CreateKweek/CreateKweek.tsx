@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { KweekUtils } from "./KweekUtils";
 import { AiOutlineDown } from "react-icons/ai";
 import { BiWorld } from "react-icons/bi";
@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { api } from "../../../utils/api";
-import { Kweek } from "@prisma/client";
+import type { Kweek } from "@prisma/client";
 
 type Props = {
   setKweeks: React.Dispatch<React.SetStateAction<Kweek[]>>;
@@ -18,6 +18,7 @@ export const CreateKweek = ({ setKweeks }: Props) => {
   const [input, setInput] = useState<string>("");
   const { data: session } = useSession();
   const router = useRouter();
+  const ref = useRef<HTMLTextAreaElement>(null);
 
   const { mutate: addKweek } = api.kweek.addKweek.useMutation({
     onSuccess(kweek) {
@@ -41,6 +42,7 @@ export const CreateKweek = ({ setKweeks }: Props) => {
       console.log(err);
     } finally {
       setInput("");
+      ref.current?.value && (ref.current.value = "");
       setHasFocused(false);
     }
   };
@@ -67,6 +69,7 @@ export const CreateKweek = ({ setKweeks }: Props) => {
           </button>
         )}
         <textarea
+          ref={ref}
           onChange={(e) => setInput(e.target.value)}
           placeholder="What's happening?"
           onFocus={handleFocus}
