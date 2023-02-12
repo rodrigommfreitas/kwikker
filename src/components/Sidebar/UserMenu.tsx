@@ -38,7 +38,10 @@ export const UserMenu = ({ setShowUserMenu }: Props) => {
         <button className="w-full border-t border-gray-medium py-2 transition hover:bg-gray-dark">
           Add an existing account
         </button>
-        <button className="w-full py-2 transition hover:bg-gray-dark">
+        <button
+          onClick={() => signOut()}
+          className="w-full py-2 transition hover:bg-gray-dark"
+        >
           Leave {session?.user.name}
         </button>
       </div>
