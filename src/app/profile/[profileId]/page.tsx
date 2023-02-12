@@ -17,6 +17,7 @@ import {
   BiLeftArrowAlt,
 } from "react-icons/bi";
 import { TiLocationOutline } from "react-icons/ti";
+import { EditProfileModal } from "../../../components/EditProfileModal";
 
 // May need to review image and banner z index
 // Make image and banner responsive
@@ -35,6 +36,8 @@ const Profile: NextPage = () => {
   const [userNotFound, setUserNotFound] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [isUnfollowModalOpen, setIsUnfollowModalOpen] =
+    useState<boolean>(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] =
     useState<boolean>(false);
   const [isUnfollowBtnHovered, setIsUnfollowBtnHovered] =
     useState<boolean>(false);
@@ -108,6 +111,13 @@ const Profile: NextPage = () => {
 
   return (
     <>
+      {isEditProfileModalOpen && (
+        <EditProfileModal
+          setIsEditProfileModalOpen={setIsEditProfileModalOpen}
+          setUserProfile={setUser}
+        />
+      )}
+
       <header className="sticky top-0 z-30 flex h-14 items-center gap-8 bg-black/50 backdrop-blur-md">
         <button
           onClick={() => router.back()}
@@ -125,19 +135,22 @@ const Profile: NextPage = () => {
 
       {user && (
         <>
-          <div className="relative z-10 h-40 w-full cursor-pointer bg-blue-light sm:h-48"></div>
+          <div className="relative z-10 h-40 w-full cursor-pointer bg-blue-light/75 sm:h-48"></div>
 
           <div className="mx-4">
             <div className="relative -top-12 flex max-h-32 justify-between sm:-top-16">
               <Image
                 src={user.image as string}
-                alt="user image"
+                alt=""
                 width={128}
                 height={128}
                 className="z-20 h-24 w-24 cursor-pointer rounded-full border-2 border-black transition hover:brightness-90 sm:h-32 sm:w-32"
               />
               {session?.user.id === userId ? (
-                <button className="h-9 self-end rounded-full border border-gray-light px-4 text-sm font-semibold tracking-wide transition hover:bg-gray-dark sm:mb-3">
+                <button
+                  onClick={() => setIsEditProfileModalOpen(true)}
+                  className="h-9 self-end rounded-full border border-gray-light px-4 text-sm font-semibold tracking-wide transition hover:bg-gray-dark sm:mb-3"
+                >
                   Edit profile
                 </button>
               ) : (
