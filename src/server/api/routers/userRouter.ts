@@ -140,4 +140,35 @@ export const userRouter = createTRPCRouter({
         );
       }
     }),
+
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().min(1).max(50),
+        bio: z.string().max(160),
+        location: z.string().max(30),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.id !== ctx.session.user.id) {
+        throw new Error("You can't update other user's profile");
+      }
+
+      try {
+        const user = await ctx.prisma.user.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            name: input.name,
+            description: input.bio,
+            location: input.location,
+          },
+        });
+        return user;
+      } catch (err) {
+        console.log(`It wasn't possible to update user...\n ${err as string}`);
+      }
+    }),
 });
