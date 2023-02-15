@@ -78,16 +78,14 @@ const Home: NextPage = () => {
       )}
 
       {activeTab === "forYou" ? (
-        forYouKweeks.map((kweek) => (
-          <KweekPost key={kweek.id} kweek={kweek} type={"feed"} />
-        ))
+        forYouKweeks.map((kweek) => <KweekPost key={kweek.id} kweek={kweek} />)
       ) : session ? (
         followingKweeks.map((kweek) => (
           // TODO: Show rekweeked or liked by user
-          <KweekPost key={kweek.id} kweek={kweek} type={"feed"} />
+          <KweekPost key={kweek.id} kweek={kweek} />
         ))
       ) : (
-        <div className="text-center text-2xl font-bold">
+        <div className="mt-2 text-center text-lg font-bold text-gray-light">
           Follow some users to see their kweeks
         </div>
       )}
