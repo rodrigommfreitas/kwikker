@@ -1,10 +1,3 @@
-/*
-TODO:
-  - Set tweets on the sidebar component (maybe use a context)
-  - Show session user on the sidebar
-  - Fix search bar UI on the secondary sidebar
-*/
-
 import "../styles/globals.css";
 import { Sidebar } from "../components/Sidebar/Sidebar";
 import { AuthProvider } from "./AuthProvider";
