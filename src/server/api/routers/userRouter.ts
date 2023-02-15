@@ -26,9 +26,17 @@ export const userRouter = createTRPCRouter({
         const followersCount = await ctx.prisma.follows.count({
           where: { followingId: input.id },
         });
+        const kweeksCount = await ctx.prisma.kweek.count({
+          where: { authorId: input.id },
+        });
+        const rekweeksCount = await ctx.prisma.rekweek.count({
+          where: { rekweekerId: input.id },
+        });
+
         return {
           followingCount: followingCount,
           followersCount: followersCount,
+          kweeksCount: kweeksCount + rekweeksCount,
         };
       } catch (err) {
         console.log(`It wasn't possible to get stats...\n ${err as string}`);
