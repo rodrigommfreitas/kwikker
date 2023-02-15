@@ -68,10 +68,10 @@ model VerificationToken {
 }
 
 model Follows {
-    followerId String
+    followerId  String
     followingId String 
-    follower User  @relation("follower", fields: [followerId], references: [id], onDelete: Cascade) 
-    following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+    follower    User  @relation("follower", fields: [followerId], references: [id], onDelete: Cascade) 
+    following   User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
 
     @@id([followerId, followingId])
     @@index([followingId])
@@ -85,8 +85,8 @@ model Kweek {
     authorId  String
     author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
     replies   Reply[]
-    likes    Like[]
-    rekweeks Rekweek[]
+    likes     Like[]
+    rekweeks  Rekweek[]
     
     @@index([authorId])
 }
@@ -95,23 +95,23 @@ model Like {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    kweekId    String
-    kweek      Kweek   @relation(fields: [kweekId], references: [id], onDelete: Cascade)
-    likerId  String
-    liker    User      @relation(fields: [likerId], references: [id], onDelete: Cascade)
+    kweekId   String
+    kweek     Kweek   @relation(fields: [kweekId], references: [id], onDelete: Cascade)
+    likerId   String
+    liker     User      @relation(fields: [likerId], references: [id], onDelete: Cascade)
 
     @@index([kweekId])
     @@index([likerId])
 }
 
 model Rekweek {
-    id        String     @id @default(cuid())
-    createdAt DateTime   @default(now())
-    updatedAt DateTime   @updatedAt
-    kweekId    String
-    kweek      Kweek     @relation(fields: [kweekId], references: [id], onDelete: Cascade)
-    rekweekerId  String
-    rekweeker    User    @relation(fields: [rekweekerId], references: [id], onDelete: Cascade)
+    id          String     @id @default(cuid())
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    kweekId     String
+    kweek       Kweek     @relation(fields: [kweekId], references: [id], onDelete: Cascade)
+    rekweekerId String
+    rekweeker   User    @relation(fields: [rekweekerId], references: [id], onDelete: Cascade)
 
     @@index([kweekId])
     @@index([rekweekerId])
@@ -124,13 +124,9 @@ model Reply {
     content   String
     authorId  String
     author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    kweekId    String
-    kweek      Kweek        @relation(fields: [kweekId], references: [id], onDelete: Cascade)
-    replyToId  String?
-    replyTo      Reply?     @relation("replyToReply", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction) 
-    replies   Reply[]       @relation("replyToReply")
+    kweekId   String
+    kweek     Kweek        @relation(fields: [kweekId], references: [id], onDelete: Cascade)
 
     @@index([authorId])
     @@index([kweekId])
-    @@index([replyToId])
 }
