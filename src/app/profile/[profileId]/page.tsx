@@ -19,14 +19,11 @@ import {
 import { TiLocationOutline } from "react-icons/ti";
 import { EditProfileModal } from "../../../components/EditProfileModal";
 
-// May need to review image and banner z index
-// Make image and banner responsive
-// Add location UI
-
 const Profile: NextPage = () => {
   const userId = usePathname()?.slice(9);
   const [followingCount, setFollowingCount] = useState<number>(0);
   const [followersCount, setFollowersCount] = useState<number>(0);
+  const [kweeksCount, setKweeksCount] = useState<number>(0);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"kweeks" | "replies" | "likes">(
     "kweeks"
@@ -59,9 +56,14 @@ const Profile: NextPage = () => {
   const { data: stats } = api.user.getStats.useQuery(
     { id: userId as string },
     {
-      onSuccess(stats: { followingCount: number; followersCount: number }) {
+      onSuccess(stats: {
+        followingCount: number;
+        followersCount: number;
+        kweeksCount: number;
+      }) {
         setFollowingCount(stats.followingCount);
         setFollowersCount(stats.followersCount);
+        setKweeksCount(stats.kweeksCount);
       },
     }
   );
@@ -129,7 +131,9 @@ const Profile: NextPage = () => {
           <div className="text-xl font-black">
             {!userData || isLoading ? "Loading profile..." : user?.name}
           </div>
-          <div className="font-sm text-sm text-gray-light">12 tweets</div>
+          <div className="font-sm text-sm text-gray-light">
+            {kweeksCount} Kweeks
+          </div>
         </div>
       </header>
 
@@ -283,21 +287,25 @@ const Profile: NextPage = () => {
               ? kweeksAndRekweeks.map((kweek) =>
                   kweek.authorId !== userId ? (
                     <KweekPost
-                      key={kweek.id}
+                      key={kweek.id + "rekweek"}
                       kweek={kweek}
-                      type="feed"
                       rekweekerId={userId}
                       rekweekerUsername={user.name as string}
+                      setLikes={setLikes}
                     />
                   ) : (
-                    <KweekPost key={kweek.id} kweek={kweek} type="feed" />
+                    <KweekPost
+                      key={kweek.id}
+                      kweek={kweek}
+                      setLikes={setLikes}
+                    />
                   )
                 )
               : activeTab === "replies"
               ? null
               : activeTab === "likes"
               ? likes.map((kweek) => (
-                  <KweekPost key={kweek.id} kweek={kweek} type="feed" />
+                  <KweekPost key={kweek.id} kweek={kweek} setLikes={setLikes} />
                 ))
               : null}
           </div>
