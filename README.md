@@ -1,28 +1,66 @@
-# Create T3 App
+# Kwikker (Twitter clone)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A Twitter clone built with the [T3 Stack](https://create.t3.gg/).
 
-## What's next? How do I make an app with this?
+## Notes:
+- I decided to test some new **Next.js 13** features, such as the new *app* directory that was still in beta at the time of creating this project. The new app directory includes support for *layouts* and *server components*;
+- I didn't completely implement certain features such as deleting kweeks because I felt like I had already learned everything valuable learning from making this project so I decided to leave it as it is for now.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
-
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
-
+## T3 stack:
 - [Next.js](https://nextjs.org)
 - [NextAuth.js](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
 
-## Learn More
+## Features:
+- Twitter UI clone and responsive design;
+- Authentication (NextAuth and Google OAuth);
+- Explore your timeline between two modes: 
+  - "For you" - shows every existing kweek; 
+  - "Following" - shows kweeks and rekweeks from people you follow.
+- Post kweeks;
+- Reply, Rekweek or Like kweeks;
+- Visit other users profiles and explore their page between two modes:
+  - "Kweeks" - see kweeks and rekweeks made by the user;
+  - "Likes" - see kweeks liked by the user;
+- Follow/unfollow other users;
+- Edit your own profile.
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Showcase:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- Initial page before any authentication, the user can see kweeks or visit profiles but can't interact with kweeks or users.
+![Guest page](https://raw.githubusercontent.com/rodrigommfreitas/kwikker/main/public/showcase/guest.png)
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- The user is getting ready to post a kweek on the main feed.
+![Guest page](https://raw.githubusercontent.com/rodrigommfreitas/kwikker/main/public/showcase/home.png)
 
-## How do I deploy this?
+- The user is viewing his own profile page.
+![Guest page](https://raw.githubusercontent.com/rodrigommfreitas/kwikker/main/public/showcase/own-profile.png)
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- The user is editing his profile information.
+![Guest page](https://raw.githubusercontent.com/rodrigommfreitas/kwikker/main/public/showcase/edit-profile.png)
+
+- The user is visiting another users profile page.
+![Guest page](https://raw.githubusercontent.com/rodrigommfreitas/kwikker/main/public/showcase/user-profile.png)
+
+- The user is viewing a kweek and its replies.
+![Guest page](https://raw.githubusercontent.com/rodrigommfreitas/kwikker/main/public/showcase/kweek.png)
+
+###### If you clone this repository you can always delete the showcase images folder which can be found inside the public folder.
+
+## Setup
+After creating your MySQL database (I used [PlanetScale](https://planetscale.com/)) and creating a google project with OAuth, setup your .env file following the structure found in .env.example.
+
+### Update db
+```
+npx prisma db push
+```
+### Install dependencies
+```
+npm install
+```
+### Run
+```
+npm run dev
+```
