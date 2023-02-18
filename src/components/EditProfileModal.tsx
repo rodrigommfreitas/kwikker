@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import { MdClose } from "react-icons/md";
@@ -28,7 +29,7 @@ export const EditProfileModal = ({
   const ref = useRef<HTMLDivElement>(null);
   useOnClickOutside(ref, () => setIsEditProfileModalOpen(false));
 
-  const { data: userData, isLoading } = api.user.getUser.useQuery(
+  const { data: userData } = api.user.getUser.useQuery(
     { id: session?.user.id as string },
     {
       onSuccess(profileUser: User) {
