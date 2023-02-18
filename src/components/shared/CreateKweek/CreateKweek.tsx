@@ -79,7 +79,7 @@ export const CreateKweek = ({ setForYouKweeks, setFollowingKweeks }: Props) => {
         />
 
         {hasFocused && (
-          <button className="mt-1 mb-2 flex items-center gap-1 rounded-full px-3 text-blue-primary hover:bg-blue-light/10 active:bg-blue-light/50">
+          <button className="mt-1 mb-2 flex items-center gap-1 rounded-full px-3 text-blue-primary transition hover:bg-blue-light/10 active:bg-blue-light/50">
             <BiWorld height="1.25em" width="1.25em" />
             <span className="text-sm font-semibold">Everyone can reply</span>
           </button>
