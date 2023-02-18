@@ -1,4 +1,4 @@
-import type { Kweek, User } from "@prisma/client";
+import type { Kweek } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -22,6 +22,68 @@ export const kweekRouter = createTRPCRouter({
         return kweek;
       } catch (err) {
         console.log(`It wasn't possible to add kweek...\n ${err as string}`);
+      }
+    }),
+
+  replyKweek: protectedProcedure
+    .input(
+      z.object({
+        kweekId: z.string(),
+        authorId: z.string(),
+        content: z
+          .string()
+          .min(1, { message: "Field can't be empty." })
+          .max(280, { message: "Maximum characters exceeded." }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const kweek = await ctx.prisma.reply.create({
+          data: input,
+        });
+        return kweek;
+      } catch (err) {
+        console.log(
+          `It wasn't possible to reply to kweek...\n ${err as string}`
+        );
+      }
+    }),
+
+  getReplies: publicProcedure
+    .input(
+      z.object({
+        kweekId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const replies = await ctx.prisma.reply.findMany({
+          where: {
+            kweekId: input.kweekId,
+          },
+        });
+        return replies;
+      } catch (err) {
+        console.log(`It wasn't possible to get replies...\n ${err as string}`);
+      }
+    }),
+
+  getKweek: publicProcedure
+    .input(
+      z.object({
+        kweekId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const kweek = await ctx.prisma.kweek.findUnique({
+          where: {
+            id: input.kweekId,
+          },
+        });
+        return kweek;
+      } catch (err) {
+        console.log(`It wasn't possible to get kweek...\n ${err as string}`);
       }
     }),
 
