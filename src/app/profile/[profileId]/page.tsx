@@ -283,7 +283,7 @@ const Profile: NextPage = () => {
             </button>
           </div>
           <div className="relative -top-12 sm:-top-16">
-            {activeTab === "kweeks"
+            {activeTab === "kweeks" || activeTab === "replies"
               ? kweeksAndRekweeks.map((kweek) =>
                   kweek.authorId !== userId ? (
                     <KweekPost
@@ -301,8 +301,6 @@ const Profile: NextPage = () => {
                     />
                   )
                 )
-              : activeTab === "replies"
-              ? null
               : activeTab === "likes"
               ? likes.map((kweek) => (
                   <KweekPost key={kweek.id} kweek={kweek} setLikes={setLikes} />
