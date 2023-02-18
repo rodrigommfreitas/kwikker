@@ -1,6 +1,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { SearchBar } from "../shared/SearchBar";
+import { Trends } from "../shared/Trends/Trends";
 import { Signup } from "./Signup";
 
 export const SecondarySidebar = () => {
@@ -12,6 +13,7 @@ export const SecondarySidebar = () => {
         <SearchBar />
       </div>
       {!session && <Signup />}
+      {session && <Trends />}
     </div>
   );
 };
