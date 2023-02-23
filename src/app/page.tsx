@@ -3,12 +3,12 @@
 import type { Kweek } from "@prisma/client";
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { type FC, useState } from "react";
 import { CreateKweek } from "../components/shared/CreateKweek/CreateKweek";
 import { KweekPost } from "../components/shared/KweekPost";
 import { api } from "../utils/api";
 
-const Home: NextPage = () => {
+const Home: FC = () => {
   const [activeTab, setActiveTab] = useState<"forYou" | "following">("forYou");
   const [forYouKweeks, setForYouKweeks] = useState<Kweek[]>([]);
   const [followingKweeks, setFollowingKweeks] = useState<Kweek[]>([]);
