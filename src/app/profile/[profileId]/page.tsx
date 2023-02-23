@@ -4,7 +4,7 @@
 import type { Kweek, User } from "@prisma/client";
 import { type NextPage } from "next";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { type FC, useState } from "react";
 import { api } from "../../../utils/api";
 import { KweekPost } from "../../../components/shared/KweekPost";
 import { useSession } from "next-auth/react";
@@ -19,7 +19,7 @@ import {
 import { TiLocationOutline } from "react-icons/ti";
 import { EditProfileModal } from "../../../components/EditProfileModal";
 
-const Profile: NextPage = () => {
+const Profile: FC = () => {
   const userId = usePathname()?.slice(9);
   const [followingCount, setFollowingCount] = useState<number>(0);
   const [followersCount, setFollowersCount] = useState<number>(0);
