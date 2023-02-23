@@ -2,14 +2,14 @@
 import type { Kweek, User } from "@prisma/client";
 import { type NextPage } from "next";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { type FC, useState } from "react";
 import { api } from "../../../utils/api";
 import { BiLeftArrowAlt } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import { KweekStatus } from "../../../components/KweekStatus";
 import { useSession } from "next-auth/react";
 
-const Status: NextPage = () => {
+const Status: FC = () => {
   const kweekId = usePathname()?.slice(8);
   const [user, setUser] = useState<User | null>(null);
   const [kweek, setKweek] = useState<Kweek | null>(null);
